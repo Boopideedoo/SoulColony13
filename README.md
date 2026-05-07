@@ -1,3 +1,8 @@
+#Soul Colony 13 based off blue colony
+Soul is a start to bring back servers like blue colony to the community so there can be modernbased servers that arent in space.
+
+
+
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/GeneriedJenelle/The-World-Server-Redux) 
 
 # Blue Colony Based on World server redux
