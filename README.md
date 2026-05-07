@@ -1,4 +1,4 @@
-#Soul Colony 13 based off blue colony
+# Soul Colony 13 based off blue colony
 Soul is a start to bring back servers like blue colony to the community so there can be modernbased servers that arent in space.
 
 
