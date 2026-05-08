@@ -5,21 +5,19 @@
 # Ranks can be anything defined in admin_ranks.txt           ~Carn   #
 ######################################################################
 
-# not_a_user - Admin
+#  - Admin
 
-maverikknight - Head Admin
-ncrranger21 - Moderator
-sovietcyanide - Moderator
-rand0mname - Moderator
-monos - Head Admin
-fighterslam - Trial Moderator
+ - Head Admin
+ - Moderator
+ - Moderator
+ - Moderator
+ - Head Admin
+ - Trial Moderator
 
-valzargaming - Host
-herma - Code Wizard
-theflagbearer - Code Wizard
-artofwasd - Code Wizard
-slayingcreepers - Code Wizard
-n8toe - Developer
-APsychonaut - Code Wizard
-semorerith - Host
-Quenya - Host
+Sulta - Host
+ - Code Wizard
+ - Code Wizard
+ - Code Wizard
+ - Code Wizard
+ - Developer
+ - Code Wizard
