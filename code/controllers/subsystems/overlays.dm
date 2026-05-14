@@ -52,7 +52,7 @@ var/global/image/appearance_bro = new() // Temporarily super-global because of B
 		if(thing)
 			STAT_START_STOPWATCH
 			var/atom/A = thing
-			COMPILE_OVERLAYS(A)
+			COMPILE_OVERLAYS (A)
 			STAT_STOP_STOPWATCH
 			STAT_LOG_ENTRY(stats, A.type)
 		if(mc_check)
@@ -107,7 +107,7 @@ var/global/image/appearance_bro = new() // Temporarily super-global because of B
 			if(isloc(overlay))
 				var/atom/A = overlay
 				if (A.flags & OVERLAY_QUEUED)
-					COMPILE_OVERLAYS(A)
+					COMPILE_OVERLAYS (A)
 			appearance_bro.appearance = overlay //this works for images and atoms too!
 			if(!ispath(overlay))
 				var/image/I = overlay

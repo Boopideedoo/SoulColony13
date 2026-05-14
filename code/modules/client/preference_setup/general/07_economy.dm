@@ -50,13 +50,12 @@
 /datum/category_item/player_setup_item/general/economy/content(var/mob/user)
 	. = list()
 	. += "<h1>Income and Expenses:</h1><hr>"
-	. += "<b>Money:</b> [cash2text( pref.money_balance, FALSE, TRUE, TRUE )] credits<br>"
-	var/datum/business/B = get_business_by_owner_uid(pref.unique_id) // no escape from tax amounts in business funds LOL
+	. += "<b>Money:</b> [cash2text(pref.money_balance, FALSE, TRUE, TRUE)] credits<br>"
+	var/datum/business/B = get_business_by_owner_uid(pref.unique_id)
 	if(B)
-		. += "<b>Business Funds:</b> [cash2text( B.get_funds(), FALSE, TRUE, TRUE )] credits<br>"
+		. += "<b>Business Funds:</b> [cash2text(B.get_funds(), FALSE, TRUE, TRUE)] credits<br>"
 	if(pref.bank_account)
 		. += "<b>Account ID:</b> [pref.bank_account]<br>"
-
 	if(pref.bank_pin)
 		. += "<b>Account Pin:</b> [pref.bank_pin]<br>"
 	. += "<b>Economic Class:</b> [pref.economic_status]<br>"
@@ -64,15 +63,15 @@
 	if(SSpersistent_options)
 		. += "<b>[pref.economic_status] Tax Rate:</b> [get_tax_rate(pref.economic_status)]<br>"
 
-	. += "<b>Debts:</b></br>"
+		. += "<b>Debts:</b><br>"
 	if(isemptylist(pref.expenses))
 		. += "<i>You have no recorded debts.</i>"
 	else
-		for(var/datum/expense/E in pref.expenses)
-			var/purpose_name
+		var/list/expenses = pref.expenses
+		for(var/datum/expense/E in expenses)
+			var/purpose_name = ""
 			if(E.purpose)
 				purpose_name = " ([E.purpose])"
-				. += "<b>[E.name][purpose_name]:</b> [E.amount_left] credits. ([E.cost_per_payroll] per payroll.)<br>"
+			. += "<b>[E.name][purpose_name]:</b> [E.amount_left] credits. ([E.cost_per_payroll] per payroll.)<br>"
 
-
-	. = jointext(.,null)
+	. = jointext(., null)

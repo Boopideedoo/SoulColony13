@@ -129,7 +129,7 @@ SUBSYSTEM_DEF(jobs)
 		if(job.minimum_character_age && (player.client.prefs.age < job.minimum_character_age))
 			Debug("FOC character not old enough, Player: [player]")
 			continue
-		if(flag && (!player.client.prefs.be_special & flag))
+		if(flag && !(player.client.prefs.be_special & flag))
 			Debug("FOC flag failed, Player: [player], Flag: [flag], ")
 			continue
 
@@ -215,20 +215,19 @@ SUBSYSTEM_DEF(jobs)
 				if(age < job.minimum_character_age) // Nope.
 					continue
 
-				switch(age)
-					if(job.minimum_character_age to (job.minimum_character_age+10))
-						weightedCandidates[V] = 3 // Still a bit young.
-					if((job.minimum_character_age+10) to (job.ideal_character_age-10))
-						weightedCandidates[V] = 6 // Better.
-					if((job.ideal_character_age-10) to (job.ideal_character_age+10))
-						weightedCandidates[V] = 10 // Great.
-					if((job.ideal_character_age+10) to (job.ideal_character_age+20))
-						weightedCandidates[V] = 6 // Still good.
-					if((job.ideal_character_age+20) to INFINITY)
-						weightedCandidates[V] = 3 // Geezer.
+				if(age <= job.minimum_character_age + 10)
+					weightedCandidates[V] = 3
+				else
+					if(age <= job.ideal_character_age - 10)
+						weightedCandidates[V] = 6
 					else
-						// If there's ABSOLUTELY NOBODY ELSE
-						if(candidates.len == 1) weightedCandidates[V] = 1
+						if(age <= job.ideal_character_age + 10)
+							weightedCandidates[V] = 10
+						else
+							if(age <= job.ideal_character_age + 20)
+								weightedCandidates[V] = 6
+							else
+								weightedCandidates[V] = 3
 
 
 			var/mob/new_player/candidate = pickweight(weightedCandidates)

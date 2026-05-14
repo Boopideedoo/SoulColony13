@@ -41,8 +41,8 @@
 	if(!isturf(t1) || !isturf(t2))
 		CRASH("Invalid arguments supplied to proc write_map, arguments were not turfs.")
 
-	var/turf/ne = locate(max(t1.x,t2.x),max(t1.y,t2.y),max(t1.z,t2.z)) // Outer corner
-	var/turf/sw = locate(min(t1.x,t2.x),min(t1.y,t2.y),min(t1.z,t2.z)) // Inner corner
+	var/turf/ne = locate(max(t1.x,t2.x), max(t1.y,t2.y), max(t1.z,t2.z))
+	var/turf/sw = locate(min(t1.x,t2.x), min(t1.y,t2.y), min(t1.z,t2.z))
 	var/list/templates[0]
 	var/list/template_buffer = list()
 	var/template_buffer_text
@@ -51,11 +51,11 @@
 	var/total_timer = start_watch()
 	var/timer = start_watch()
 	log_debug("Reading turfs...")
-	// Read the contents of all the turfs we were given
+
 	for(var/pos_z in sw.z to ne.z)
-		for(var/pos_y in ne.y to sw.y step -1) // We're reversing this because the map format is silly
+		for(var/pos_y in ne.y to sw.y step -1)
 			for(var/pos_x in sw.x to ne.x)
-				var/turf/test_turf = locate(pos_x,pos_y,pos_z)
+				var/turf/test_turf = locate(pos_x, pos_y, pos_z)
 				var/test_template = make_template(test_turf, flags)
 				var/template_number = templates.Find(test_template)
 				if(!template_number)
@@ -63,52 +63,86 @@
 					template_number = templates.len
 				template_buffer += "[template_number],"
 				CHECK_TICK
-
 			template_buffer += ";"
-
 		template_buffer += "."
-	template_buffer_text = jointext(template_buffer,"")
+
+	template_buffer_text = jointext(template_buffer, "")
 	log_debug("Reading turfs took [stop_watch(timer)]s.")
 
 	if(templates.len == 0)
 		CRASH("No templates found!")
-	var/key_length = round/*floor*/(log(letter_digits.len,templates.len-1)+1)
+
+	var/key_length = round/*floor*/(log(letter_digits.len, templates.len - 1) + 1)
 	var/list/keys[templates.len]
-	// Write the list of key/model pairs to the file
+
 	timer = start_watch()
 	log_debug("Writing out key/model pairs to file header...")
 	var/list/key_models = list()
 	for(var/key_pos in 1 to templates.len)
-		keys[key_pos] = get_model_key(key_pos,key_length)
+		keys[key_pos] = get_model_key(key_pos, key_length)
 		key_models += "\"[keys[key_pos]]\" = ([templates[key_pos]])\n"
 		CHECK_TICK
-	dmm_text += jointext(key_models,"")
+	dmm_text += jointext(key_models, "")
 	log_debug("Writing key/model pairs complete, took [stop_watch(timer)]s.")
 
 	var/z_level = 0
-	// Loop over all z in our zone
 	timer = start_watch()
 	log_debug("Writing out key map...")
 	var/list/key_map = list()
-	for(var/z_pos=1;TRUE;z_pos=findtext(template_buffer_text,".",z_pos)+1)
-		if(z_pos>=length(template_buffer_text))	break
-		if(z_level)	key_map += "\n"
+
+	var/z_pos = 1
+	var/z_end = 0
+	while(TRUE)
+		if(z_pos >= length(template_buffer_text))
+			break
+
+		z_end = findtext(template_buffer_text, ".", z_pos)
+		if(!z_end)
+			break
+
+		if(z_level)
+			key_map += "\n"
 		key_map += "\n(1,1,[++z_level]) = {\"\n"
-		var/z_block = copytext(template_buffer_text,z_pos,findtext(template_buffer_text,".",z_pos))
-		for(var/y_pos=1;TRUE;y_pos=findtext(z_block,";",y_pos)+1)
-			if(y_pos>=length(z_block))	break
-			var/y_block = copytext(z_block,y_pos,findtext(z_block,";",y_pos))
-			// A row of keys
-			for(var/x_pos=1;TRUE;x_pos=findtext(y_block,",",x_pos)+1)
-				if(x_pos>=length(y_block))	break
-				var/x_block = copytext(y_block,x_pos,findtext(y_block,",",x_pos))
+
+		var/z_block = copytext(template_buffer_text, z_pos, z_end)
+		var/y_pos = 1
+		var/y_end = 0
+
+		while(TRUE)
+			if(y_pos >= length(z_block))
+				break
+
+			y_end = findtext(z_block, ";", y_pos)
+			if(!y_end)
+				break
+
+			var/y_block = copytext(z_block, y_pos, y_end)
+			var/x_pos = 1
+			var/x_end = 0
+
+			while(TRUE)
+				if(x_pos >= length(y_block))
+					break
+
+				x_end = findtext(y_block, ",", x_pos)
+				if(!x_end)
+					break
+
+				var/x_block = copytext(y_block, x_pos, x_end)
 				var/key_number = text2num(x_block)
 				var/temp_key = keys[key_number]
 				key_map += temp_key
 				CHECK_TICK
+
+				x_pos = x_end + 1
+
 			key_map += "\n"
+			y_pos = y_end + 1
+
 		key_map += "\"}"
-	dmm_text += jointext(key_map,"")
+		z_pos = z_end + 1
+
+	dmm_text += jointext(key_map, "")
 	log_debug("Writing key map complete, took [stop_watch(timer)]s.")
 	log_debug("TOTAL TIME: [stop_watch(total_timer)]s.")
 	return dmm_text

@@ -112,51 +112,44 @@ obj/machinery/atmospherics/mains_pipe
 				scrubbers.nodes[i] = node.scrubbers
 				aux.nodes[i] = node.aux
 
-obj/machinery/atmospherics/mains_pipe/simple
+obj/machinery/atmospherics/mains_pipe
 	name = "mains pipe"
 	desc = "A one meter section of 3-line mains pipe"
-
 	dir = SOUTH
 	initialize_mains_directions = SOUTH|NORTH
 
 	New()
 		nodes.len = 2
 		..()
-		switch(dir)
-			if(SOUTH || NORTH)
-				initialize_mains_directions = SOUTH|NORTH
-			if(EAST || WEST)
-				initialize_mains_directions = EAST|WEST
-			if(NORTHEAST)
-				initialize_mains_directions = NORTH|EAST
-			if(NORTHWEST)
-				initialize_mains_directions = NORTH|WEST
-			if(SOUTHEAST)
-				initialize_mains_directions = SOUTH|EAST
-			if(SOUTHWEST)
-				initialize_mains_directions = SOUTH|WEST
+
+		if(dir == SOUTH || dir == NORTH)
+			initialize_mains_directions = SOUTH|NORTH
+		else if(dir == EAST || dir == WEST)
+			initialize_mains_directions = EAST|WEST
+		else if(dir == NORTHEAST)
+			initialize_mains_directions = NORTH|EAST
+		else if(dir == NORTHWEST)
+			initialize_mains_directions = NORTH|WEST
+		else if(dir == SOUTHEAST)
+			initialize_mains_directions = SOUTH|EAST
+		else if(dir == SOUTHWEST)
+			initialize_mains_directions = SOUTH|WEST
 
 	proc/normalize_dir()
-		if(dir==3)
+		if(dir == 3)
 			set_dir(1)
-		else if(dir==12)
+		else if(dir == 12)
 			set_dir(4)
 
 	update_icon()
 		if(nodes[1] && nodes[2])
-			icon_state = "intact[invisibility ? "-f" : "" ]"
-
-			//var/node1_direction = get_dir(src, node1)
-			//var/node2_direction = get_dir(src, node2)
-
-			//set_dir(node1_direction|node2_direction)
-
+			icon_state = "intact[invisibility ? "-f" : ""]"
 		else
-			if(!nodes[1]&&!nodes[2])
-				qdel(src) //TODO: silent deleting looks weird
-			var/have_node1 = nodes[1]?1:0
-			var/have_node2 = nodes[2]?1:0
-			icon_state = "exposed[have_node1][have_node2][invisibility ? "-f" : "" ]"
+			if(!nodes[1] && !nodes[2])
+				qdel(src)
+			var/have_node1 = nodes[1] ? 1 : 0
+			var/have_node2 = nodes[2] ? 1 : 0
+			icon_state = "exposed[have_node1][have_node2][invisibility ? "-f" : ""]"
 
 	atmos_init()
 		normalize_dir()
@@ -164,25 +157,26 @@ obj/machinery/atmospherics/mains_pipe/simple
 		var/node2_dir
 
 		for(var/direction in cardinal)
-			if(direction&initialize_mains_directions)
-				if (!node1_dir)
+			if(direction & initialize_mains_directions)
+				if(!node1_dir)
 					node1_dir = direction
-				else if (!node2_dir)
+				else if(!node2_dir)
 					node2_dir = direction
 
-		for(var/obj/machinery/atmospherics/mains_pipe/target in get_step(src,node1_dir))
-			if(target.initialize_mains_directions & get_dir(target,src))
+		for(var/obj/machinery/atmospherics/mains_pipe/target in get_step(src, node1_dir))
+			if(target.initialize_mains_directions & get_dir(target, src))
 				nodes[1] = target
 				break
-		for(var/obj/machinery/atmospherics/mains_pipe/target in get_step(src,node2_dir))
-			if(target.initialize_mains_directions & get_dir(target,src))
+		for(var/obj/machinery/atmospherics/mains_pipe/target in get_step(src, node2_dir))
+			if(target.initialize_mains_directions & get_dir(target, src))
 				nodes[2] = target
 				break
 
-		..() // initialize internal pipes
+		..()
 
-		var/turf/T = src.loc			// hide if turf is not intact
-		if(level == 1 && !T.is_plating()) hide(1)
+		var/turf/T = src.loc
+		if(level == 1 && !T.is_plating())
+			hide(1)
 		update_icon()
 
 	hidden

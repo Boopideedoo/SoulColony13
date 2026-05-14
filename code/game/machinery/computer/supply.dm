@@ -101,7 +101,7 @@
 				shuttle_status["engine"] = "Engaged"
 
 	else
-		shuttle["mode"] = SUP_SHUTTLE_ERROR
+		shuttle_status["mode"] = SUP_SHUTTLE_ERROR
 
 	for(var/pack_name in supply_controller.supply_pack)
 		var/datum/supply_pack/P = supply_controller.supply_pack[pack_name]

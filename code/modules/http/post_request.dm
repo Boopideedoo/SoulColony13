@@ -57,7 +57,7 @@
 	if (args.len < 2)
 		return -1
 
-	var/list/result = json_decode(call("lib/byhttp.dll", "send_post_request")(arglist(args)))
+	var/list/result = json_decode(call_ext("lib/byhttp.dll", "send_post_request")(arglist(args)))
 
 	if (!result)
 		log_debug("ByHTTP POST: No result returned from external library.")
@@ -86,7 +86,7 @@
 	if (args.len < 2)
 		return -1
 
-	var/result = call("ByondPOST.dll", "send_get_request")(arglist(args))
+	var/result = call_ext("ByondPOST.dll", "send_get_request")(arglist(args))
 
 	if (!result)
 		log_debug("ByondPOST GET: No result returned from external library.")

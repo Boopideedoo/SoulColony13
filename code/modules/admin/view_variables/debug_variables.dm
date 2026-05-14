@@ -3,11 +3,12 @@
 	var/header
 	if(DA)
 		if (islist(DA))
+			var/list/L = DA
 			var/index = name
 			if (value)
-				name = DA[name] //name is really the index until this line
+				name = L[index] //name is really the index until this line
 			else
-				value = DA[name]
+				value = L[index]
 			header = "<li style='backgroundColor:white'>(<a href='?_src_=vars;listedit=\ref[DA];index=[index]'>E</a>) (<a href='?_src_=vars;listchange=\ref[DA];index=[index]'>C</a>) (<a href='?_src_=vars;listremove=\ref[DA];index=[index]'>-</a>) "
 		else
 			header = "<li style='backgroundColor:white'>(<a href='?_src_=vars;datumedit=\ref[DA];varnameedit=[name]'>E</a>) (<a href='?_src_=vars;datumchange=\ref[DA];varnamechange=[name]'>C</a>) (<a href='?_src_=vars;datummass=\ref[DA];varnamemass=[name]'>M</a>) "

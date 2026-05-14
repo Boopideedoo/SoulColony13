@@ -444,7 +444,7 @@
 				shuttle_status["engine"] = "Engaged"
 
 	else
-		shuttle["mode"] = SUP_SHUTTLE_ERROR
+		shuttle_status["mode"] = SUP_SHUTTLE_ERROR
 
 	return shuttle_status
 
