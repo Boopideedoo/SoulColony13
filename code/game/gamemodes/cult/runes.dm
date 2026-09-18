@@ -13,12 +13,11 @@ var/list/sacrificed = list()
  */
 
 
-/////////////////////////////////////////FIRST RUNE
+/*First Rune */
 	proc
 		teleport(var/key)
 			var/mob/living/user = usr
-			var/allrunesloc[]
-			allrunesloc = new/list()
+			var/list/allrunesloc = list()
 			var/index = 0
 		//	var/tempnum = 0
 			for(var/obj/effect/rune/R in world)
