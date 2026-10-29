@@ -13,6 +13,7 @@
 ################# DEBUG STUFF #####################
 import sys
 import CORE_DATA
+import Whoopshopchecker
 
 import urllib.request, urllib.error, urllib.parse
 
@@ -264,7 +265,6 @@ if nudgeable:
          
          def nudgereceiver():
             import pickle
-            global conn,channel
             port = 45678
             backlog = 5
             size = 1024
@@ -340,7 +340,6 @@ if aggressive_pinging:
    backup = time.time()
    def aggressive_ping(delay,refresh):
       self_time = 0
-      global backup,disconnects,conn
       while disconnects < 5:
          if backup > self_time and time.time()-backup > delay:
             conn.send("PONG "+pongtarg)
@@ -353,7 +352,7 @@ if aggressive_pinging:
          time.sleep(refresh)
    _thread.start_new_thread(aggressive_ping,(aggressive_pinging_delay,aggressive_pinging_refresh,))
 def stop(sender,debug=1):
-   global disconnects, conn, operators,channel
+   global disconnects
    if type(sender) == tuple:
       if sender[0] == "127.0.0.1":
          sender = sender[0]+":"+str(sender[1])
@@ -379,13 +378,12 @@ def stop(sender,debug=1):
       return False
       
 def cocheck(command):
-   global influx
    if influx.lower()[0:len(command)] == command:
       return True
    else:
       return False
 def target(who,how_long):
-   global conn,channel,CALL_OFF,logbans,debug
+   global CALL_OFF
    start = time.time()
    conn.banon(targetchannel,who)
    sleep(int(how_long))
@@ -405,7 +403,7 @@ def target(who,how_long):
       CALL_OFF = False
       pass
 def replace():
-   global usable,conn,fixing,curtime
+   global usable, fixing, curtime
    waiting_time = 600
    if usable == True:
       conn.privmsg(targetchannel,sender+": It needs no replacing.")
@@ -427,7 +425,7 @@ def replace():
          usable = True
       fixing = False
 def autoRecv():
-   global disconnects,channel,conn,offensive_mode
+   global disconnects, offensive_mode
    for i in CORE_DATA.channels:
       conn.join(i)
       time.sleep(1)
@@ -702,7 +700,7 @@ while True:
                   preprocess = " note: "
                else:
                   preprocess = " notes: "
-               if len(arg2) == 0:
+               if not arg:
                   conn.privmsg(targetchannel,sender+" : You have no notes saved")
                else:
                   conn.privmsg(targetchannel,sender+" : "+str(len(arg2))+preprocess+", ".join(arg2))
